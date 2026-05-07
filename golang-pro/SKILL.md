@@ -10,19 +10,24 @@ A two-layer skill for writing idiomatic Go.
 - **Layer 1** — modern syntax/stdlib features per Go version (sourced from JetBrains/go-modern-guidelines)
 - **Layer 2** — idiomatic patterns the version-table doesn't cover (errors, interfaces, packages, testing, concurrency, naming)
 
-## Detected Go Version
+## Target Go Version
 
-!`grep -rh "^go " --include="go.mod" . 2>/dev/null | cut -d' ' -f2 | sort | uniq -c | sort -nr | head -1 | xargs | cut -d' ' -f2 | grep . || echo unknown`
+Determine the target Go version before applying Layer 1:
+
+1. Prefer the `go` directive from the nearest `go.mod` relevant to the user's task.
+2. If multiple modules are involved, use the module being edited or reviewed. If the task spans modules with different versions, use the lowest relevant version unless the user says otherwise.
+3. If available, you may run `scripts/detect-go-version.sh [path]` from this skill directory to summarize `go.mod` versions in a workspace.
+4. If no version can be determined, ask the user which version to target.
 
 ## How to use
 
-Use the version detected above when available. If detection returns `unknown`, do a quick nearest-module check before asking: look for `go.mod` in the current workspace/module root relevant to the user's task. If still unknown, ask the user.
+Use the target Go version determined above. Do not assume the latest Go version if the project declares an older one.
 
 **If version detected:**
 - Briefly tell the user: "Targeting Go X.XX — using language features and stdlib up to that version, plus idiomatic patterns."
 - Do NOT enumerate features. Do NOT ask for confirmation.
 
-**If "unknown" after the nearest-module check:**
+**If version is still unknown:**
 - Ask: "Could not detect Go version. Which to target? [1.23 / 1.24 / 1.25 / 1.26]"
 
 **While writing or reviewing Go code, apply BOTH layers:**
