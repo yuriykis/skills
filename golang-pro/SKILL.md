@@ -16,13 +16,13 @@ A two-layer skill for writing idiomatic Go.
 
 ## How to use
 
-DO NOT search for go.mod yourself. Use ONLY the version detected above.
+Use the version detected above when available. If detection returns `unknown`, do a quick nearest-module check before asking: look for `go.mod` in the current workspace/module root relevant to the user's task. If still unknown, ask the user.
 
 **If version detected:**
 - Briefly tell the user: "Targeting Go X.XX — using language features and stdlib up to that version, plus idiomatic patterns."
 - Do NOT enumerate features. Do NOT ask for confirmation.
 
-**If "unknown":**
+**If "unknown" after the nearest-module check:**
 - Ask: "Could not detect Go version. Which to target? [1.23 / 1.24 / 1.25 / 1.26]"
 
 **While writing or reviewing Go code, apply BOTH layers:**
@@ -148,6 +148,7 @@ for part := range strings.SplitSeq(s, ",") { process(part) }
 ### Go 1.25+
 
 - `wg.Go(fn)` instead of `wg.Add(1)` + `go func() { defer wg.Done(); ... }()`
+- The function passed to `wg.Go` must not panic. If panic recovery is required, handle it inside the function.
 
 ```go
 var wg sync.WaitGroup
@@ -339,7 +340,7 @@ slog.Info("processed request", "user_id", userID, "duration_ms", elapsed.Millise
 
 # Verification rules (anti-hallucination)
 
-- The current Go version as of writing this skill is **1.26.x**. If your training data says otherwise, trust this and `go.mod`, not your prior.
+- This skill's version table was last verified against **Go 1.26.x**. Prefer the project's `go.mod` and official docs over this file if they disagree.
 - If you are unsure whether a function/method exists or behaves as described here, **check `pkg.go.dev` or write a tiny test** — do not guess.
 - If a rule in this skill conflicts with what `gofmt`, `go vet`, or `staticcheck` says about real code, the tool wins. Tell the user.
 - If the user asks for a pattern this skill labels "Avoid" and gives a good reason, follow the user. The skill is guidance, not law.
