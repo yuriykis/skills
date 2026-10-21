@@ -6,6 +6,7 @@ This repository contains Claude/OpenCode skills. Each skill is a folder with a r
 
 - `golang-pro`: Idiomatic, version-aware Go guidance for writing and reviewing Go code.
 - `software-architecture`: Backend architecture pattern guidance for layered, hexagonal, Clean Architecture, DDD, CQRS, and Event Sourcing decisions.
+- `one-sentence`: Very short answers (ideally one sentence) backed by thorough verification (files, commands, web search); admits uncertainty instead of guessing.
 
 ## Installation
 
